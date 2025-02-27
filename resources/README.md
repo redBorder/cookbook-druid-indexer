@@ -11,7 +11,7 @@
 [license-shield]: https://img.shields.io/badge/license-AGPLv3-blue.svg
 [license-url]: https://github.com/cookbook-druid-indexer/blob/HEAD/LICENSE
 
-Chef cookbook to install and configure druid-indexer in redborder
+Chef cookbook to install and configure druid-indexer service in redborder environments
 
 ### Platforms
 
