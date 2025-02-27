@@ -1,4 +1,4 @@
-PACKAGE_NAME?=	cookbook-mongodb
+PACKAGE_NAME?=	cookbook-druid-indexer
 
 VERSION?=	$(shell git describe --abbrev=6 --tags HEAD --always | sed 's/-/_/g')
 

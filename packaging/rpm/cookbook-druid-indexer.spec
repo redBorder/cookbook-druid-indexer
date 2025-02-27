@@ -25,8 +25,6 @@ mkdir -p %{buildroot}/var/chef/cookbooks/rb-druid-indexer
 cp -f -r  resources/* %{buildroot}/var/chef/cookbooks/rb-druid-indexer/
 chmod -R 0755 %{buildroot}/var/chef/cookbooks/rb-druid-indexer
 install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/rb-druid-indexer/README.md
-mkdir -p %{buildroot}/usr/lib/redborder/scripts
-cp resources/scripts/* %{buildroot}/usr/lib/redborder/scripts
 
 %pre
 
