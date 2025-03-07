@@ -10,6 +10,7 @@ action :add do
     tasks = new_resource.tasks
     zookeeper_servers = new_resource.zookeeper_servers
     log_dir = new_resource.log_dir
+    namespaces = new_resource.namespaces
 
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
@@ -41,6 +42,33 @@ action :add do
       group 'root'
       mode '0755'
     end
+
+
+    base_tasks = [
+      { task_name: 'rb_monitor', feed: 'rb_monitor' },
+      { task_name: 'rb_state', feed: 'rb_state_post' },
+      { task_name: 'rb_flow', feed: 'rb_flow_post' },
+      { task_name: 'rb_event', feed: 'rb_event_post' },
+      { task_name: 'rb_vault', feed: 'rb_vault_post' },
+      { task_name: 'rb_scanner', feed: 'rb_scanner_post' },
+      { task_name: 'rb_location', feed: 'rb_loc_post' },
+      { task_name: 'rb_wireless', feed: 'rb_wireless' },
+    ]
+    
+    tasks = base_tasks.flat_map do |task|
+      default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_host: 'kafka.service:9092' }
+    
+      namespace_tasks = namespaces.map do |namespace|
+        feed = task[:feed] + '_' + namespace
+        feed = 'rb_monitor_post_' + namespace if task[:task_name] == 'rb_monitor'
+    
+        { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, feed: feed, kafka_host: 'kafka.service:9092' }
+      end
+    
+      [default_task] + namespace_tasks
+    end
+
+    node.default['redborder']['druid-indexer-tasks'] = tasks.length
 
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
