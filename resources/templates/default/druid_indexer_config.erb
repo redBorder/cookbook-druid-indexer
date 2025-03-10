@@ -8,7 +8,7 @@ zookeeper_servers:
 tasks:
 <% @tasks.each do |task| %>
   - task_name: "<%= task[:task_name] %>"
-    namespace: "<%= task[:namespace] %>"
     feed: "<%= task[:feed] %>"
+    spec: "<%= task[:spec] %>"
     kafka_host: "<%= task[:kafka_host] %>"
 <% end %>
