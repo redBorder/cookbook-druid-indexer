@@ -12,17 +12,17 @@ action :add do
     log_dir = new_resource.log_dir
     namespaces = new_resource.namespaces
 
+    service 'rb-druid-indexer' do
+      supports status: true, start: true, restart: true, reload: true, stop: true
+      action [:enable, :start]
+    end
+    
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
       action :upgrade
       flush_cache [:before]
       notifies :restart, 'service[rb-druid-indexer]', :delayed
       ignore_failure true
-    end
-
-    service 'rb-druid-indexer' do
-      supports status: true, start: true, restart: true, reload: true, stop: true
-      action [:enable, :start]
     end
 
     # User creation
