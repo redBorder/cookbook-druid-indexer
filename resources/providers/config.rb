@@ -16,6 +16,8 @@ action :add do
     dnf_package 'rb-druid-indexer' do
       action :upgrade
       flush_cache [:before]
+      notifies :restart, 'service[rb-druid-indexer]', :delayed
+      ignore_failure true
     end
 
     service 'rb-druid-indexer' do
