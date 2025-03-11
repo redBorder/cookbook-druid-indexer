@@ -16,7 +16,7 @@ action :add do
       supports status: true, start: true, restart: true, reload: true, stop: true
       action [:enable, :start]
     end
-    
+
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
       action :upgrade
@@ -67,13 +67,13 @@ action :add do
     
     tasks = base_tasks.flat_map do |task|
       default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_host: 'kafka.service:9092' }
-      default_task[:custom_dimensions] = dimensions unless !task[:task_name] == "rb_vault"
+      default_task[:custom_dimensions] = dimensions.keys unless !task[:task_name] == "rb_vault"
       
       namespace_tasks = namespaces.map do |namespace|
         taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_host: 'kafka.service:9092' }
         taskHash[:feed] = task[:feed] + '_' + namespace
         taskHash[:feed] = 'rb_monitor_post_' + namespace unless !task[:task_name] == 'rb_monitor'
-        taskHash[:custom_dimensions] = dimensions unless !task[:task_name] == 'rb_vault'
+        taskHash[:custom_dimensions] = dimensions.keys unless !task[:task_name] == 'rb_vault'
         taskHash
       end
     
