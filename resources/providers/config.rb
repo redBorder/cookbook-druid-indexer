@@ -57,16 +57,16 @@ action :add do
       { task_name: 'rb_state', feed: 'rb_state_post' },
       { task_name: 'rb_flow', feed: 'rb_flow_post' },
       { task_name: 'rb_event', feed: 'rb_event_post' },
-      { task_name: 'rb_vault', feed: 'rb_vault_post'},
+      { task_name: 'rb_vault', feed: 'rb_vault_post' },
       { task_name: 'rb_scanner', feed: 'rb_scanner_post' },
       { task_name: 'rb_location', feed: 'rb_loc_post' },
       { task_name: 'rb_wireless', feed: 'rb_wireless' },
     ]
-    
+
     tasks = base_tasks.flat_map do |task|
       default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_host: 'kafka.service:9092' }
-      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == "rb_vault"
-      
+      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
+
       namespace_tasks = namespaces.map do |namespace|
         taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_host: 'kafka.service:9092' }
         taskHash[:feed] = task[:feed] + '_' + namespace
@@ -74,7 +74,7 @@ action :add do
         taskHash[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
         taskHash
       end
-    
+
       [default_task] + namespace_tasks
     end
 
