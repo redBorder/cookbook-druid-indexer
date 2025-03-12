@@ -8,19 +8,25 @@ action :add do
     config_dir = new_resource.config_dir
     user = new_resource.user
     tasks = new_resource.tasks
-    zookeeper_servers = new_resource.zookeeper_servers
+    zk_hosts = new_resource.zk_hosts
+    kafka_brokers = new_resource.kafka_brokers
     log_dir = new_resource.log_dir
     namespaces = new_resource.namespaces
+
+    kafka_brokers = kafka_brokers.map { |broker| "#{broker}.node:9092" }
+    zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
+    
+    service 'rb-druid-indexer' do
+      supports status: true, start: true, restart: true, reload: true, stop: true
+      action [:enable, :start]
+    end
 
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
       action :upgrade
       flush_cache [:before]
-    end
-
-    service 'rb-druid-indexer' do
-      supports status: true, start: true, restart: true, reload: true, stop: true
-      action [:enable, :start]
+      notifies :restart, 'service[rb-druid-indexer]', :delayed
+      ignore_failure true
     end
 
     # User creation
@@ -57,18 +63,18 @@ action :add do
       { task_name: 'rb_state', feed: 'rb_state_post' },
       { task_name: 'rb_flow', feed: 'rb_flow_post' },
       { task_name: 'rb_event', feed: 'rb_event_post' },
-      { task_name: 'rb_vault', feed: 'rb_vault_post' },
+      { task_name: 'rb_vault', feed: 'rb_vault_post'},
       { task_name: 'rb_scanner', feed: 'rb_scanner_post' },
       { task_name: 'rb_location', feed: 'rb_loc_post' },
       { task_name: 'rb_wireless', feed: 'rb_wireless' },
     ]
 
     tasks = base_tasks.flat_map do |task|
-      default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_host: 'kafka.service:9092' }
-      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
+      default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_brokers: kafka_brokers }
+      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == "rb_vault"
 
       namespace_tasks = namespaces.map do |namespace|
-        taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_host: 'kafka.service:9092' }
+        taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_brokers: kafka_brokers }
         taskHash[:feed] = task[:feed] + '_' + namespace
         taskHash[:feed] = 'rb_monitor_post_' + namespace if task[:task_name] == 'rb_monitor'
         taskHash[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
@@ -86,7 +92,7 @@ action :add do
       owner 'root'
       group 'root'
       mode '0644'
-      variables(tasks: tasks, zookeeper_servers: zookeeper_servers)
+      variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
     end
