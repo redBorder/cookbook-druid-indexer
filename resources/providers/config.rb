@@ -15,7 +15,7 @@ action :add do
 
     kafka_brokers = kafka_brokers.map { |broker| "#{broker}.node:9092" }
     zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
-    
+
     service 'rb-druid-indexer' do
       supports status: true, start: true, restart: true, reload: true, stop: true
       action [:enable, :start]
@@ -63,7 +63,7 @@ action :add do
       { task_name: 'rb_state', feed: 'rb_state_post' },
       { task_name: 'rb_flow', feed: 'rb_flow_post' },
       { task_name: 'rb_event', feed: 'rb_event_post' },
-      { task_name: 'rb_vault', feed: 'rb_vault_post'},
+      { task_name: 'rb_vault', feed: 'rb_vault_post' },
       { task_name: 'rb_scanner', feed: 'rb_scanner_post' },
       { task_name: 'rb_location', feed: 'rb_loc_post' },
       { task_name: 'rb_wireless', feed: 'rb_wireless' },
@@ -71,7 +71,7 @@ action :add do
 
     tasks = base_tasks.flat_map do |task|
       default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_brokers: kafka_brokers }
-      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == "rb_vault"
+      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
 
       namespace_tasks = namespaces.map do |namespace|
         taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_brokers: kafka_brokers }
