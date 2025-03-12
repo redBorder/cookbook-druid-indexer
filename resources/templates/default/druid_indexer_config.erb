@@ -10,7 +10,10 @@ tasks:
   - task_name: "<%= task[:task_name] %>"
     feed: "<%= task[:feed] %>"
     spec: "<%= task[:spec] %>"
-    kafka_host: "<%= task[:kafka_host] %>"
+    kafka_brokers:
+    <% task[:kafka_brokers].each do | broker |%>
+      - "<%= broker %>"
+    <% end %>
     <% if task[:custom_dimensions] && task[:custom_dimensions].any? %>
     custom_dimensions:
       <% task[:custom_dimensions].each do |dimension| %>
