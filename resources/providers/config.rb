@@ -16,17 +16,15 @@ action :add do
     kafka_brokers = kafka_brokers.map { |broker| "#{broker}.node:9092" }
     zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
 
-    service 'rb-druid-indexer' do
-      supports status: true, start: true, restart: true, reload: true, stop: true
-      action [:enable, :start]
-    end
-
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
       action :upgrade
       flush_cache [:before]
-      notifies :restart, 'service[rb-druid-indexer]', :delayed
-      ignore_failure true
+    end
+
+    service 'rb-druid-indexer' do
+      supports status: true, start: true, restart: true, reload: true, stop: true
+      action [:enable, :start]
     end
 
     # User creation
