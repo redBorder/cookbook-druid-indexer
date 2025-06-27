@@ -19,7 +19,6 @@ action :add do
     # RPM Installation
     dnf_package 'rb-druid-indexer' do
       action :upgrade
-      flush_cache [:before]
     end
 
     service 'rb-druid-indexer' do
