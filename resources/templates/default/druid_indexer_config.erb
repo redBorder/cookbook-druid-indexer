@@ -14,10 +14,26 @@ tasks:
     <% task[:kafka_brokers].each do | broker |%>
       - "<%= broker %>"
     <% end %>
-    <% if task[:custom_dimensions] && task[:custom_dimensions].any? %>
-    custom_dimensions:
-      <% task[:custom_dimensions].each do |dimension| %>
+    <% if task[:dimensions] && task[:dimensions].any? %>
+    dimensions:
+      <% task[:dimensions].each do |dimension| %>
         - "<%= dimension %>"
+      <% end %>
+    <% end %>
+    <% if task[:dimensions_exclusions] && task[:dimensions_exclusions].any? %>
+    dimensions_exclusions:
+      <% task[:dimensions_exclusions].each do |dimension| %>
+        - "<%= dimension %>"
+      <% end %>
+    <% end %>
+    <% if task[:metrics] && task[:metrics].any? %>
+    metrics:
+      <% task[:metrics].each do |metric| %>
+        - type: <%= metric[:type] %>
+          name: <%= metric[:name] %>
+        <% if metric.key? :fieldName %>
+          fieldName: <%= metric[:fieldName] %>
+        <% end %>
       <% end %>
     <% end %>
 <% end %>
