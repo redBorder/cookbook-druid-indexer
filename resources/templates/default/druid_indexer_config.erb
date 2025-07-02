@@ -23,7 +23,7 @@ tasks:
     <% if task[:dimensions_exclusions] && task[:dimensions_exclusions].any? %>
     dimensions_exclusions:
       <% task[:dimensions_exclusions].each do |dimension| %>
-        - "<%= dimension %>"
+        - "<%= dimension %>
       <% end %>
     <% end %>
     <% if task[:metrics] && task[:metrics].any? %>
