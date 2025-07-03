@@ -167,7 +167,6 @@ action :add do
         ] },
     ]
 
-
     tasks = base_tasks.flat_map do |task|
       default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_brokers: kafka_brokers,
       dimensions: task[:dimensions], dimensions_exclusions: task[:dimensions_exclusions], metrics: task[:metrics] }
