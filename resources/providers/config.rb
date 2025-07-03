@@ -44,15 +44,6 @@ action :add do
       mode '0755'
     end
 
-    dimensions = {}
-    Dir.glob('/var/rb-extensions/*/dimensions.yml') do |item|
-      begin
-        dimensions.merge!(YAML.load_file(item))
-      rescue
-        dimensions
-      end
-    end
-
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
       cookbook 'rb-druid-indexer'
