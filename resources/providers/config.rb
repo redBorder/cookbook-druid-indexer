@@ -10,7 +10,6 @@ action :add do
     tasks = new_resource.tasks
     zk_hosts = new_resource.zk_hosts
     log_dir = new_resource.log_dir
-    tasks = new_resource.tasks
 
     zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
 
