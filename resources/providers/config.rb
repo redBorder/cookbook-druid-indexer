@@ -9,11 +9,8 @@ action :add do
     user = new_resource.user
     tasks = new_resource.tasks
     zk_hosts = new_resource.zk_hosts
-    kafka_brokers = new_resource.kafka_brokers
     log_dir = new_resource.log_dir
-    namespaces = new_resource.namespaces
 
-    kafka_brokers = kafka_brokers.map { |broker| "#{broker}.node:9092" }
     zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
 
     # RPM Installation
@@ -45,43 +42,6 @@ action :add do
       group 'root'
       mode '0755'
     end
-
-    dimensions = {}
-    Dir.glob('/var/rb-extensions/*/dimensions.yml') do |item|
-      begin
-        dimensions.merge!(YAML.load_file(item))
-      rescue
-        dimensions
-      end
-    end
-
-    base_tasks = [
-      { task_name: 'rb_monitor', feed: 'rb_monitor' },
-      { task_name: 'rb_state', feed: 'rb_state_post' },
-      { task_name: 'rb_flow', feed: 'rb_flow_post' },
-      { task_name: 'rb_event', feed: 'rb_event_post' },
-      { task_name: 'rb_vault', feed: 'rb_vault_post' },
-      { task_name: 'rb_scanner', feed: 'rb_scanner_post' },
-      { task_name: 'rb_location', feed: 'rb_loc_post' },
-      { task_name: 'rb_wireless', feed: 'rb_wireless' },
-    ]
-
-    tasks = base_tasks.flat_map do |task|
-      default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_brokers: kafka_brokers }
-      default_task[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
-
-      namespace_tasks = namespaces.map do |namespace|
-        taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_brokers: kafka_brokers }
-        taskHash[:feed] = task[:feed] + '_' + namespace
-        taskHash[:feed] = 'rb_monitor_post_' + namespace if task[:task_name] == 'rb_monitor'
-        taskHash[:custom_dimensions] = dimensions.keys if task[:task_name] == 'rb_vault'
-        taskHash
-      end
-
-      [default_task] + namespace_tasks
-    end
-
-    node.default['redborder']['druid-indexer-tasks'] = tasks.length
 
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
