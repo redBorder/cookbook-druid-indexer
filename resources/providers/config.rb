@@ -51,7 +51,7 @@ action :add do
           { type: 'doubleSum', name: 'sum_value', fieldName: 'value' },
           { type: 'doubleMax', name: 'max_value', fieldName: 'value' },
           { type: 'doubleMin', name: 'min_value', fieldName: 'value' },
-        ] 
+        ],
       },
       'rb_state': {
         dimensions: %w(
@@ -68,7 +68,7 @@ action :add do
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
           { type: 'hyperUnique', name: 'wireless_channels', fieldName: 'wireless_channel' },
           { type: 'longSum', name: 'sum_wireless_tx_power', fieldName: 'wireless_tx_power' },
-        ] 
+        ],
       },
       'rb_flow': {
         dimensions: %w(
@@ -93,7 +93,7 @@ action :add do
           { type: 'longSum', name: 'sum_rssi', fieldName: 'client_rssi_num' },
           { type: 'hyperUnique', name: 'clients', fieldName: 'client_mac' },
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
-        ] 
+        ],
       },
       'rb_event': {
         dimensions: %w(
@@ -109,7 +109,7 @@ action :add do
         metrics: [
           { type: 'count', name: 'events' },
           { type: 'hyperUnique', name: 'signatures', fieldName: 'msg' },
-        ] 
+        ],
       },
       'rb_vault': {
         dimensions: %w(
@@ -124,7 +124,7 @@ action :add do
         dimensions_exclusions: %w(unit type valur),
         metrics: [
           { type: 'count', name: 'events' },
-        ] 
+        ],
       },
       'rb_scanner': {
         dimensions: %w(
@@ -138,7 +138,7 @@ action :add do
         dimensions_exclusions: [],
         metrics: [
           { type: 'count', name: 'events' },
-        ] 
+        ],
       },
       'rb_location': {
         dimensions: %w(
@@ -152,7 +152,7 @@ action :add do
           { type: 'doubleSum', name: 'sum_latitude', fieldName: 'latitude' },
           { type: 'doubleSum', name: 'sum_longitude', fieldName: 'longitude' },
           { type: 'hyperUnique', name: 'unique_locations', fieldName: 'location_id' },
-        ] 
+        ],
       },
       'rb_wireless': {
         dimensions: %w(
@@ -167,15 +167,15 @@ action :add do
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
           { type: 'hyperUnique', name: 'wireless_channels', fieldName: 'wireless_channel' },
           { type: 'longSum', name: 'sum_wireless_tx_power', fieldName: 'wireless_tx_power' },
-        ] 
+        ],
       },
     }
 
-    tasks.map! do |task| 
+    tasks.map! do |task|
       config = task_config[task[:spec]] || {
         dimensions: [],
         dimensions_exclusions: [],
-        metrics: []
+        metrics: [],
       }
       task.merge(config)
     end
