@@ -9,11 +9,8 @@ action :add do
     user = new_resource.user
     tasks = new_resource.tasks
     zk_hosts = new_resource.zk_hosts
-    kafka_brokers = new_resource.kafka_brokers
     log_dir = new_resource.log_dir
-    namespaces = new_resource.namespaces
 
-    kafka_brokers = kafka_brokers.map { |broker| "#{broker}.node:9092" }
     zk_hosts = zk_hosts.map { |zk_server| "#{zk_server}.node:2181" }
 
     # RPM Installation
@@ -46,8 +43,7 @@ action :add do
       mode '0755'
     end
 
-    base_tasks = [
-      { task_name: 'rb_monitor', feed: 'rb_monitor',
+    task_config = { 'rb_monitor': {
         dimensions: [],
         dimensions_exclusions: %w(unit type value),
         metrics: [
@@ -55,8 +51,9 @@ action :add do
           { type: 'doubleSum', name: 'sum_value', fieldName: 'value' },
           { type: 'doubleMax', name: 'max_value', fieldName: 'value' },
           { type: 'doubleMin', name: 'min_value', fieldName: 'value' },
-        ] },
-      { task_name: 'rb_state', feed: 'rb_state_post',
+        ] 
+      },
+      'rb_state': {
         dimensions: %w(
           wireless_station type wireless_channel wireless_tx_power wireless_admin_state wireless_op_state
           wireless_mode wireless_slot sensor_name sensor_uuid deployment deployment_uuid namespace namespace_uuid
@@ -71,8 +68,9 @@ action :add do
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
           { type: 'hyperUnique', name: 'wireless_channels', fieldName: 'wireless_channel' },
           { type: 'longSum', name: 'sum_wireless_tx_power', fieldName: 'wireless_tx_power' },
-        ] },
-      { task_name: 'rb_flow', feed: 'rb_flow_post',
+        ] 
+      },
+      'rb_flow': {
         dimensions: %w(
           application_id_name building building_uuid campus campus_uuid client_accounting_type
           client_auth_type client_fullname client_gender client_id client_latlong client_loyality client_mac
@@ -95,8 +93,9 @@ action :add do
           { type: 'longSum', name: 'sum_rssi', fieldName: 'client_rssi_num' },
           { type: 'hyperUnique', name: 'clients', fieldName: 'client_mac' },
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
-        ] },
-      { task_name: 'rb_event', feed: 'rb_event_post',
+        ] 
+      },
+      'rb_event': {
         dimensions: %w(
           src src_is_malicious dst dst_is_malicious sensor_uuid src_port dst_port src_as_name src_country_code
           dst_map src_map service_provider sha256 sha256_is_malicious file_uri file_uri_is_malicious file_size file_hostname
@@ -110,8 +109,9 @@ action :add do
         metrics: [
           { type: 'count', name: 'events' },
           { type: 'hyperUnique', name: 'signatures', fieldName: 'msg' },
-        ] },
-      { task_name: 'rb_vault', feed: 'rb_vault_post',
+        ] 
+      },
+      'rb_vault': {
         dimensions: %w(
           pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip
           app_name sensor_name proxy_uuid message status ti_category ti_average_score ti_policy_name ti_policy_id
@@ -124,8 +124,9 @@ action :add do
         dimensions_exclusions: %w(unit type valur),
         metrics: [
           { type: 'count', name: 'events' },
-        ] },
-      { task_name: 'rb_scanner', feed: 'rb_scanner_post',
+        ] 
+      },
+      'rb_scanner': {
         dimensions: %w(
           pri pri_text syslogfacility syslogfacility_text syslogseverity syslogseverity_text hostname fromhost_ip
           app_name sensor_name proxy_uuid message status category source target sensor_uuid service_provider
@@ -137,8 +138,9 @@ action :add do
         dimensions_exclusions: [],
         metrics: [
           { type: 'count', name: 'events' },
-        ] },
-      { task_name: 'rb_location', feed: 'rb_loc_post',
+        ] 
+      },
+      'rb_location': {
         dimensions: %w(
           location_id latitude longitude address city region country postal_code sensor_name sensor_uuid
           deployment deployment_uuid namespace namespace_uuid organization organization_uuid market market_uuid floor
@@ -150,8 +152,9 @@ action :add do
           { type: 'doubleSum', name: 'sum_latitude', fieldName: 'latitude' },
           { type: 'doubleSum', name: 'sum_longitude', fieldName: 'longitude' },
           { type: 'hyperUnique', name: 'unique_locations', fieldName: 'location_id' },
-        ] },
-      { task_name: 'rb_wireless', feed: 'rb_wireless',
+        ] 
+      },
+      'rb_wireless': {
         dimensions: %w(
           wireless_station type wireless_channel wireless_tx_power wireless_admin_state wireless_op_state wireless_mode
           wireless_slot sensor_name sensor_uuid deployment deployment_uuid namespace namespace_uuid organization
@@ -164,25 +167,18 @@ action :add do
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
           { type: 'hyperUnique', name: 'wireless_channels', fieldName: 'wireless_channel' },
           { type: 'longSum', name: 'sum_wireless_tx_power', fieldName: 'wireless_tx_power' },
-        ] },
-    ]
+        ] 
+      },
+    }
 
-    tasks = base_tasks.flat_map do |task|
-      default_task = { spec: task[:task_name], task_name: task[:task_name], namespace: '', feed: task[:feed], kafka_brokers: kafka_brokers,
-      dimensions: task[:dimensions], dimensions_exclusions: task[:dimensions_exclusions], metrics: task[:metrics] }
-
-      namespace_tasks = namespaces.map do |namespace|
-        taskHash = { spec: task[:task_name], task_name: task[:task_name] + '_' + namespace, namespace: namespace, kafka_brokers: kafka_brokers,
-        dimensions: task[:dimensions], dimensions_exclusions: task[:dimensions_exclusions], metrics: task[:metrics] }
-        taskHash[:feed] = task[:feed] + '_' + namespace
-        taskHash[:feed] = 'rb_monitor_post_' + namespace if task[:task_name] == 'rb_monitor'
-        taskHash
-      end
-
-      [default_task] + namespace_tasks
+    tasks.map! do |task| 
+      config = task_config[task[:spec]] || {
+        dimensions: [],
+        dimensions_exclusions: [],
+        metrics: []
+      }
+      task.merge(config)
     end
-
-    node.default['redborder']['druid-indexer-tasks'] = tasks.length
 
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
