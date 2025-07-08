@@ -7,7 +7,8 @@ action :add do
   begin
     config_dir = new_resource.config_dir
     user = new_resource.user
-    tasks = new_resource.tasks
+    # Make a deep copy to be able to change new_resource.tasks, which is unchangeable
+    tasks = Marshal.load(Marshal.dump(new_resource.tasks))
     zk_hosts = new_resource.zk_hosts
     log_dir = new_resource.log_dir
 
