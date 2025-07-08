@@ -7,8 +7,7 @@ action :add do
   begin
     config_dir = new_resource.config_dir
     user = new_resource.user
-    # Make a deep copy to be able to change new_resource.tasks, which is unchangeable
-    tasks = Marshal.load(Marshal.dump(new_resource.tasks))
+    tasks = new_resource.tasks
     zk_hosts = new_resource.zk_hosts
     log_dir = new_resource.log_dir
 
@@ -173,7 +172,7 @@ action :add do
     }
 
     tasks.map! do |task|
-      config = task_config[task[:spec]] || {
+      config = task_config[task['spec'].to_sym] || {
         dimensions: [],
         dimensions_exclusions: [],
         metrics: [],
