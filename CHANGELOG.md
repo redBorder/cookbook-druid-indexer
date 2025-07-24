@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.1.0
+
+  - Pablo Torres
+    - [81069d7] Improvement #21846: move dimensions to yml
+
 ## 0.0.3
 
   - Rafael Gomez
