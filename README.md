@@ -30,6 +30,12 @@ Chef cookbook to install and configure druid-indexer in redborder environments
 5. Run the tests, ensuring they all pass
 6. Submit a Pull Request using Github
 
+## Adding dimensions, exclusions or metrics for rb-druid-indexer
+
+You can add/remove dimensions, dimensions exlusions or metrics for the datasource in the druid indexer by editting the **base_task** array on **cookbook-druid-indexer/resources/providers/config.rb**.
+
+When chef-client is executed, this information will be put on **/etc/rb-druid-indexer/config.yml** for the indexer to use
+
 ## License
 
 GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
