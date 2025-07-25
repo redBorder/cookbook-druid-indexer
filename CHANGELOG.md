@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.2.1
+
+  - jnavarrorb
+    - [0c87b9e] Remove executable permissions on non-executable files
+
 ## 0.2.0
 
   - Rafael Gomez
