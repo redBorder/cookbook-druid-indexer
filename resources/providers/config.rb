@@ -118,7 +118,7 @@ action :add do
           ti_indicators category source target sensor_uuid service_provider service_provider_uuid namespace namespace_uuid
           deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building
           building_uuid floor floor_uuid action incident_uuid alarm_id alarm_name alarm_product_type alarm_condition
-          alarm_user alarm_severity lan_ip wan_ip source target wireless_station asset_ip_address asset_mac_address
+          alarm_user alarm_severity lan_ip wan_ip wireless_station asset_ip_address asset_mac_address
           client_mac ethdst ethsrc
         ),
         dimensions_exclusions: %w(unit type valur),
