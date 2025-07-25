@@ -1,6 +1,13 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.2.0
+
+  - Rafael Gomez
+    - [301a035] Remove duplicated fields (source and target)
+  - Juan Soto
+    - [852c617] Refactor dimensions inclusion in action :add to standardize variable names
+
 ## 0.1.0
 
   - Pablo Torres
