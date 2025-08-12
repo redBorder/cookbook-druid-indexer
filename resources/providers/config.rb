@@ -140,6 +140,18 @@ action :add do
           { type: 'count', name: 'events' },
         ],
       },
+      'rb_host_discovery' => {
+        dimensions: %w(
+          ip mac vendor hostname os os_vendor os_family os_gen services cpe open_ports_count scan_id timestamp
+          sensor_name sensor_uuid service_provider service_provider_uuid namespace namespace_uuid organization 
+          organization_uuid zone zone_uuid building building_uuid campus campus_uuid deployment deployment_uuid 
+          market market_uuid floor floor_uuid scan_type 
+        ),
+        dimensions_exclusions: [],
+        metrics: [
+          { type: 'count', name: 'events' },
+        ]
+      },
       'rb_location': {
         dimensions: %w(
           location_id latitude longitude address city region country postal_code sensor_name sensor_uuid
