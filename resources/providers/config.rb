@@ -169,6 +169,23 @@ action :add do
           { type: 'longSum', name: 'sum_wireless_tx_power', fieldName: 'wireless_tx_power' },
         ],
       },
+      'rb_malware': {
+        dimensions: %w(
+        type email_id email_sender email_destination status file_name file_size hash sensor_name sensor_ip
+        sensor_uuid url src src_name dst dst_name client_id client_mac proxy_ip domain_name hash_score hash_probe_score
+        url_score url_probe_score ip_score ip_probe_score endpoint_uuid ioc action flow_type md5 s3_new s3_old
+        ),
+        dimensions_exclusions: [],
+        metrics: [
+          { type: 'longSum', name: 'events', fieldName: 'events' },
+          { type: 'hyperUnique', name: 'files', fieldName: 'files' },
+          { type: 'hyperUnique', name: 'endpoints', fieldName: 'endpoints' },
+          { type: 'hyperUnique', name: 'iocs', fieldName: 'iocs' },
+          { type: 'longSum', name: 'events', fieldName: 'events' },
+          { type: 'hyperUnique', name: 'iocs', fieldName: 'iocs' },
+          { type: 'hyperUnique', name: 'endpoints', fieldName: 'endpoints' },
+        ]
+      },
     }
 
     tasks.map! do |task|
