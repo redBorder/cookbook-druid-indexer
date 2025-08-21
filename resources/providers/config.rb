@@ -181,9 +181,6 @@ action :add do
           { type: 'hyperUnique', name: 'files', fieldName: 'files' },
           { type: 'hyperUnique', name: 'endpoints', fieldName: 'endpoints' },
           { type: 'hyperUnique', name: 'iocs', fieldName: 'iocs' },
-          { type: 'longSum', name: 'events', fieldName: 'events' },
-          { type: 'hyperUnique', name: 'iocs', fieldName: 'iocs' },
-          { type: 'hyperUnique', name: 'endpoints', fieldName: 'endpoints' },
         ]
       },
     }
