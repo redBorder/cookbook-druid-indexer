@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.2.2
+  - Juan Soto
+    - [30c2002] Refactor dimensions formatting in rb_host_discovery configuration
+    - [865eb69] Add rb_host_discovery configuration with dimensions and metrics
+
 ## 0.2.1
 
   - jnavarrorb
