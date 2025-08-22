@@ -181,7 +181,7 @@ action :add do
           { type: 'hyperUnique', name: 'files', fieldName: 'files' },
           { type: 'hyperUnique', name: 'endpoints', fieldName: 'endpoints' },
           { type: 'hyperUnique', name: 'iocs', fieldName: 'iocs' },
-        ]
+        ],
       },
     }
 
