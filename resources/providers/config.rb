@@ -171,14 +171,14 @@ action :add do
       },
       'rb_malware': {
         dimensions: %w(
-        application_id_name building building_uuid campus campus_uuid client_id 
-        client_mac deployment deployment_uuid domain_name dst email_destination 
-        email_destinations email_id email_sender file_name file_size filename 
-        floor floor_uuid hash hash_probe_score hash_score ip_probe_score 
-        ip_score lan_ip malware_name market market_uuid namespace 
+        application_id_name building building_uuid campus campus_uuid client_id
+        client_mac deployment deployment_uuid domain_name dst email_destination
+        email_destinations email_id email_sender file_name file_size filename
+        floor floor_uuid hash hash_probe_score hash_score ip_probe_score
+        ip_score lan_ip malware_name market market_uuid namespace
         namespace_uuid organization organization_uuid probe_hash_score probe_ip_score
-        probe_url_score proxy_ip score sensor_name sensor_uuid service_provider 
-        service_provider_uuid sha256 src status type url url_probe_score 
+        probe_url_score proxy_ip score sensor_name sensor_uuid service_provider
+        service_provider_uuid sha256 src status type url url_probe_score
         url_score wan_ip
         ),
         dimensions_exclusions: [],
