@@ -184,7 +184,7 @@ action :add do
         dimensions_exclusions: [],
         metrics: [
           { type: 'count', name: 'events' },
-          { type: 'hyperUnique', name: 'files', fieldName: 'hash'}
+          { type: 'hyperUnique', name: 'files', fieldName: 'hash' },
         ],
       },
     }
