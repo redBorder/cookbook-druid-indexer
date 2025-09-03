@@ -1,6 +1,12 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.3.0
+
+  - Pablo Torres
+    - [f1b1f51] Feature #22342: Change dimensions
+    - [6dea6d0] Feature #22342: Add malware datasource
+
 ## 0.2.2
   - Juan Soto
     - [30c2002] Refactor dimensions formatting in rb_host_discovery configuration
