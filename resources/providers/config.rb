@@ -207,10 +207,9 @@ action :add do
       task.merge(config)
     end
 
-    # config_path = "#{config_dir}/config.yml"
     # old_feed_rb_monitor = fetch_rb_monitor_feed(config_path)
 
-    template config_path do
+    template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
       cookbook 'rb-druid-indexer'
       owner 'root'
