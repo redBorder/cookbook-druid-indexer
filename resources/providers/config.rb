@@ -207,7 +207,10 @@ action :add do
       task.merge(config)
     end
 
-    template "#{config_dir}/config.yml" do
+    # config_path = "#{config_dir}/config.yml"
+    # old_feed_rb_monitor = fetch_rb_monitor_feed(config_path)
+
+    template config_path do
       source 'druid_indexer_config.erb'
       cookbook 'rb-druid-indexer'
       owner 'root'
@@ -215,7 +218,17 @@ action :add do
       mode '0644'
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
+      notifies :run, 'execute[run_feed_change_script]', :delayed
       notifies :restart, 'service[rb-druid-indexer]', :delayed
+      #notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
+    end
+
+    # new_feed_rb_monitor = fetch_rb_monitor_feed(config_path) || 'rb_monitor_post'
+
+    execute 'run_feed_change_script' do
+      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor'
+      action :run
+      # only_if { old_feed_rb_monitor != new_feed_rb_monitor }
     end
 
     Chef::Log.info('rb-druid-indexer cookbook has been processed')
