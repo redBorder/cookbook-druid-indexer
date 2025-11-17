@@ -217,9 +217,8 @@ action :add do
       mode '0644'
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
-      notifies :run, 'execute[run_feed_change_script]', :delayed
       notifies :restart, 'service[rb-druid-indexer]', :delayed
-      #notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
+      # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
     # new_feed_rb_monitor = fetch_rb_monitor_feed(config_path) || 'rb_monitor_post'
