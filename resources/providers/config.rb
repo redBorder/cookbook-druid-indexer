@@ -224,7 +224,7 @@ action :add do
     # new_feed_rb_monitor = fetch_rb_monitor_feed(config_path) || 'rb_monitor_post'
 
     execute 'run_feed_change_script' do
-      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor'
+      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
       action :run
       # only_if { old_feed_rb_monitor != new_feed_rb_monitor }
     end
