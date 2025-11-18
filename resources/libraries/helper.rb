@@ -4,7 +4,7 @@ require 'yaml'
 
 module RbDruidIndexer
   module Helper
-    def fetch_rb_monitor_feed(config_path, task_name = 'rb_monitor')
+    def self.fetch_rb_monitor_feed(config_path, task_name = 'rb_monitor')
       default_value = 'rb_monitor'
       return default_value unless ::File.exist?(config_path)
 
