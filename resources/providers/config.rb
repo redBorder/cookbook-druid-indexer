@@ -221,13 +221,14 @@ action :add do
       # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
-    execute 'run_feed_change_script' do
+    execute 'run_on_feed_change' do
       command '/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
       action :run
       only_if(
         lazy do
           new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
-          old_feed_rb_monitor != new_feed_rb_monitor
+          should_restart = old_feed_rb_monitor != new_feed_rb_monitor
+          should_restart
         end
       )
     end
