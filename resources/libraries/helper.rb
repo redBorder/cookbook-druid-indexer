@@ -14,10 +14,8 @@ module RbDruidIndexer
         # |> task_name
         # |> feed
         task = config['tasks']&.find { |t| t['task_name'] == task_name }
-
         # Return its feed, or nil if not found
         task ? task['feed'] : default_value
-
       rescue => e
         Chef::Log.warn("Failed to read rb_monitor feed from #{config_path}: #{e}")
         default_value
