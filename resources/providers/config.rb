@@ -188,7 +188,7 @@ action :add do
           floor_uuid hash hash_probe_score hash_score ip_probe_score ip_score lan_ip malware_name market market_uuid
           namespace namespace_uuid organization organization_uuid probe_hash_score probe_ip_score probe_url_score
           proxy_ip score sensor_name sensor_uuid service_provider service_provider_uuid sha256 src status type url
-          url_probe_score url_score wan_ip
+          url_probe_score url_score wan_ip incident_uuid
         ),
         dimensions_exclusions: [],
         metrics: [
