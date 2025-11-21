@@ -218,6 +218,7 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
+      notifies :run, 'ruby_block[restart_rb_monitor_if_feed_changed]', :immediately
       # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
@@ -229,6 +230,7 @@ action :add do
           system('/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor')
         end
       end
+      action :nothing
     end
 
     Chef::Log.info('rb-druid-indexer cookbook has been processed')
