@@ -222,6 +222,8 @@ action :add do
       # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
+    # Restart would be called on every node when template is updated
+    # TODO: Run only once instead of 1 to n (number of nodes) times
     ruby_block 'restart_rb_monitor_if_feed_changed' do
       block do
         new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
