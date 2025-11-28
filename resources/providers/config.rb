@@ -207,6 +207,13 @@ action :add do
       task.merge(config)
     end
 
+    execute 'restart_rb_monitor_supervisor' do
+      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
+      action :nothing
+    end
+
+    old_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
+
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
       cookbook 'rb-druid-indexer'
@@ -216,6 +223,21 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
+      notifies :run, 'ruby_block[restart_rb_monitor_if_feed_changed]', :immediately
+      # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
+    end
+
+    # Restart would be called on every node when template is updated
+    # TODO: Run only once instead of 1 to n (number of nodes) times
+    ruby_block 'restart_rb_monitor_if_feed_changed' do
+      block do
+        new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
+        if old_feed_rb_monitor != new_feed_rb_monitor
+          Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}; restarting supervisor.")
+          run_context.resource_collection.find('execute[restart_rb_monitor_supervisor]').run_action(:run)
+        end
+      end
+      action :nothing
     end
 
     Chef::Log.info('rb-druid-indexer cookbook has been processed')
