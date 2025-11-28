@@ -207,6 +207,11 @@ action :add do
       task.merge(config)
     end
 
+    execute 'restart_rb_monitor_supervisor' do
+      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
+      action :nothing
+    end
+
     old_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
 
     template "#{config_dir}/config.yml" do
@@ -228,8 +233,8 @@ action :add do
       block do
         new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
         if old_feed_rb_monitor != new_feed_rb_monitor
-          Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}. Restarting supervisor.")
-          system('/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor')
+          Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}; restarting supervisor.")
+          run_context.resource_collection.find('execute[restart_rb_monitor_supervisor]').run_action(:run)
         end
       end
       action :nothing
