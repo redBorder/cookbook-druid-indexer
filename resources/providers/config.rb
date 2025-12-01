@@ -208,7 +208,7 @@ action :add do
     end
 
     execute 'restart_rb_monitor_supervisor' do
-      command '/usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby /usr/lib/redborder/bin/rb_restart_druid_supervisor -s rb_monitor'
       action :nothing
     end
 
