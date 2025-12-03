@@ -43,7 +43,8 @@ action :add do
       mode '0755'
     end
 
-    task_config = { 'rb_monitor': {
+    task_config = { 
+      'rb_monitor': {
         dimensions: [],
         dimensions_exclusions: %w(unit type value),
         metrics: [
@@ -207,8 +208,14 @@ action :add do
       task.merge(config)
     end
 
-    execute 'restart_rb_monitor_supervisor' do
-      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor.rb -s rb_monitor'
+    # execute 'restart_rb_monitor_supervisor' do
+    #   command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor.rb -s rb_monitor'
+    #   cwd '/usr/lib/redborder/scripts/'
+    #   action :nothing
+    # end
+
+    execute 'delete_rb_monitor_supervisor' do
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_druid_supervisor_action.rb -a delete -s rb_monitor'
       cwd '/usr/lib/redborder/scripts/'
       action :nothing
     end
@@ -224,18 +231,18 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
-      notifies :run, 'ruby_block[restart_rb_monitor_if_feed_changed]', :immediately
+      notifies :run, 'ruby_block[delete_rb_monitor_if_feed_changed]', :immediately # Restart of the service will recover rb_monitor
       # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
     # Restart would be called on every node when template is updated
     # TODO: Run only once instead of 1 to n (number of nodes) times
-    ruby_block 'restart_rb_monitor_if_feed_changed' do
+    ruby_block 'delete_rb_monitor_if_feed_changed' do
       block do
         new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
         if old_feed_rb_monitor != new_feed_rb_monitor
           Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}; restarting supervisor.")
-          run_context.resource_collection.find('execute[restart_rb_monitor_supervisor]').run_action(:run)
+          run_context.resource_collection.find('execute[delete_rb_monitor_supervisor]').run_action(:run)
         end
       end
       action :nothing
