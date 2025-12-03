@@ -215,7 +215,7 @@ action :add do
     # end
 
     execute 'delete_rb_monitor_supervisor' do
-      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_druid_supervisor_action.rb -a delete -s rb_monitor'
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_druid_supervisor_action.rb -a shutdown -s rb_monitor'
       cwd '/usr/lib/redborder/scripts/'
       action :nothing
     end
