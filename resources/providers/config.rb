@@ -215,7 +215,7 @@ action :add do
     # end
 
     execute 'delete_rb_monitor_supervisor' do
-      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_druid_supervisor_action.rb -a shutdown -s rb_monitor'
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor_action.rb -a shutdown -s rb_monitor'
       cwd '/usr/lib/redborder/scripts/'
       action :nothing
     end
@@ -242,7 +242,7 @@ action :add do
         new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
         if old_feed_rb_monitor != new_feed_rb_monitor
           Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}; restarting supervisor.")
-          run_context.resource_collection.find('execute[delete_rb_monitor_supervisor]').run_action(:run)
+          # run_context.resource_collection.find('execute[delete_rb_monitor_supervisor]').run_action(:run)
         end
       end
       action :nothing
