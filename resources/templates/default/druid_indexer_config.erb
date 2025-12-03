@@ -4,6 +4,9 @@ zookeeper_servers:
   - "<%= server %>"
 <% end %>
 
+router_discovery_path:
+  - "/druid/discoveryPath/druid:router"
+
 <%# Define tasks %>
 tasks:
 <% @tasks.each do |task| %>
