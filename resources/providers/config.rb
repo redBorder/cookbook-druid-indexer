@@ -215,7 +215,7 @@ action :add do
     # end
 
     execute 'delete_rb_monitor_supervisor' do
-      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor_action.rb -a shutdown -s rb_monitor'
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor_action.rb -s rb_monitor'
       cwd '/usr/lib/redborder/scripts/'
       action :nothing
     end
@@ -231,8 +231,8 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
+      notifies :restart, 'service[druid-indexer]', :delayed # task usually keep in pending. Restart indexer to unblock.
       notifies :run, 'ruby_block[delete_rb_monitor_if_feed_changed]', :immediately # Restart of the service will recover rb_monitor
-      # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
     # Restart would be called on every node when template is updated
