@@ -43,7 +43,8 @@ action :add do
       mode '0755'
     end
 
-    task_config = { 'rb_monitor': {
+    task_config = {
+      'rb_monitor': {
         dimensions: [],
         dimensions_exclusions: %w(unit type value),
         metrics: [
@@ -207,6 +208,22 @@ action :add do
       task.merge(config)
     end
 
+    execute 'restart_rb_monitor_supervisor' do
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor.rb -s rb_monitor'
+      cwd '/usr/lib/redborder/scripts/'
+      action :nothing
+    end
+
+    ruby_block 'delayed_restart_druid_indexer' do
+      block do
+        sleep 60
+        resources(service: 'druid-indexer').run_action(:restart)
+      end
+      action :nothing
+    end
+
+    old_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
+
     template "#{config_dir}/config.yml" do
       source 'druid_indexer_config.erb'
       cookbook 'rb-druid-indexer'
@@ -216,6 +233,21 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
+      notifies :run, 'ruby_block[delayed_restart_druid_indexer]', :delayed # task usually keep in pending. Restart indexer to unblock.
+      notifies :run, 'ruby_block[delete_rb_monitor_if_feed_changed]', :immediately # Restart of the service will recover rb_monitor
+    end
+
+    # Restart would be called on every node when template is updated
+    # TODO: Run only once instead of 1 to n (number of nodes) times
+    ruby_block 'delete_rb_monitor_if_feed_changed' do
+      block do
+        new_feed_rb_monitor = RbDruidIndexer::Helper.fetch_rb_monitor_feed("#{config_dir}/config.yml")
+        if old_feed_rb_monitor != new_feed_rb_monitor
+          Chef::Log.info("rb_monitor feed changed: #{old_feed_rb_monitor} -> #{new_feed_rb_monitor}; restarting supervisor.")
+          # run_context.resource_collection.find('execute[delete_rb_monitor_supervisor]').run_action(:run)
+        end
+      end
+      action :nothing
     end
 
     Chef::Log.info('rb-druid-indexer cookbook has been processed')
