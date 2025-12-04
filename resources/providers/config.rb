@@ -43,7 +43,7 @@ action :add do
       mode '0755'
     end
 
-    task_config = { 
+    task_config = {
       'rb_monitor': {
         dimensions: [],
         dimensions_exclusions: %w(unit type value),
