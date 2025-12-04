@@ -208,15 +208,17 @@ action :add do
       task.merge(config)
     end
 
-    # execute 'restart_rb_monitor_supervisor' do
-    #   command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor.rb -s rb_monitor'
-    #   cwd '/usr/lib/redborder/scripts/'
-    #   action :nothing
-    # end
-
-    execute 'delete_rb_monitor_supervisor' do
-      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor_action.rb -s rb_monitor'
+    execute 'restart_rb_monitor_supervisor' do
+      command '/usr/lib/rvm/rubies/ruby-2.7.5/bin/ruby rb_restart_druid_supervisor.rb -s rb_monitor'
       cwd '/usr/lib/redborder/scripts/'
+      action :nothing
+    end
+
+    ruby_block 'delayed_restart_druid_indexer' do
+      block do
+        sleep 60
+        resources(service: 'druid-indexer').run_action(:restart)
+      end
       action :nothing
     end
 
@@ -231,7 +233,7 @@ action :add do
       variables(tasks: tasks, zookeeper_servers: zk_hosts)
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
-      notifies :restart, 'service[druid-indexer]', :delayed # task usually keep in pending. Restart indexer to unblock.
+      notifies :run, 'ruby_block[delayed_restart_druid_indexer]', :delayed # task usually keep in pending. Restart indexer to unblock.
       notifies :run, 'ruby_block[delete_rb_monitor_if_feed_changed]', :immediately # Restart of the service will recover rb_monitor
     end
 
