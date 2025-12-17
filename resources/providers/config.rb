@@ -226,7 +226,6 @@ action :add do
       retries 2
       notifies :restart, 'service[rb-druid-indexer]', :delayed
       notifies :run, 'ruby_block[restart_rb_monitor_if_feed_changed]', :immediately
-      # notifies :restart, 'service[druid-indexer]', :delayed # Restart needed wether all namespaces added/removed for rb_monitor
     end
 
     # Restart would be called on every node when template is updated
