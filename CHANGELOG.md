@@ -1,6 +1,12 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.4.0
+
+  - Pablo Pérez
+    - [c03e277] Add incident fields
+    - [821952e] Add incident_uuid
+
 ## 0.3.0
 
   - Pablo Torres
