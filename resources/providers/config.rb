@@ -83,7 +83,7 @@ action :add do
           sensor_name sensor_uuid service_provider service_provider_uuid src_map tcp_flags tos type url
           wan_interface_description wan_interface_name wan_ip wan_ip_as_name wan_ip_country_code wan_ip_map wan_ip_net_name
           wan_l4_port wan_name wan_vlan wireless_id ti_category ti_average_score ti_policy_name ti_policy_id
-          ti_indicators wireless_operator wireless_station zone zone_uuid client_asset_type
+          ti_indicators wireless_operator wireless_station zone zone_uuid client_asset_type device_id device_name device_role
         ),
         dimensions_exclusions: %w(bytes pkts flow_end_reason first_switched wan_ip_name),
         metrics: [
@@ -119,7 +119,7 @@ action :add do
           deployment deployment_uuid market market_uuid organization organization_uuid campus campus_uuid building
           building_uuid floor floor_uuid action incident_uuid alarm_id alarm_name alarm_product_type alarm_condition
           alarm_user alarm_severity lan_ip wan_ip wireless_station asset_ip_address asset_mac_address
-          client_mac ethdst ethsrc
+          client_mac ethdst ethsrc device_id device_name device_role
         ),
         dimensions_exclusions: %w(unit type valur),
         metrics: [
