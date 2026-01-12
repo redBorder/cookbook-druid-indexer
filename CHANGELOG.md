@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.5.0
+
+  - manegron
+    - [7e9fcca] Add device dimensions to vault, flow and monitor
+
 ## 0.4.0
 
   - Pablo Pérez
