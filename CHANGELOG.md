@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.5.1
+
+  - manegron
+    - [f20c43c] Add missing dimensions in wireless datasource
+
 ## 0.5.0
 
   - manegron

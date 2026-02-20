@@ -171,7 +171,7 @@ action :add do
           wireless_station type wireless_channel wireless_tx_power wireless_admin_state wireless_op_state wireless_mode
           wireless_slot sensor_name sensor_uuid deployment deployment_uuid namespace namespace_uuid organization
           organization_uuid market market_uuid floor floor_uuid zone zone_uuid building building_uuid campus campus_uuid
-          service_provider service_provider_uuid wireless_station_ip status wireless_station_name client_count
+          service_provider service_provider_uuid wireless_station_ip status wireless_station_name client_count client_mac client_profile
         ),
         dimensions_exclusions: [],
         metrics: [
