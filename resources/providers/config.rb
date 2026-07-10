@@ -95,6 +95,15 @@ action :add do
           { type: 'hyperUnique', name: 'wireless_stations', fieldName: 'wireless_station' },
         ],
       },
+      'rb_trap': {
+        dimensions: %w(
+          sensor_name host oid version message sensor_uuid proxy_uuid
+        ),
+        dimensions_exclusions: [],
+        metrics: [
+          { type: 'count', name: 'events' },
+        ],
+      },
       'rb_event': {
         dimensions: %w(
           src src_is_malicious dst dst_is_malicious sensor_uuid src_port dst_port src_as_name src_country_code
