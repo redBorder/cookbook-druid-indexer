@@ -97,7 +97,7 @@ action :add do
       },
       'rb_trap': {
         dimensions: %w(
-          sensor_name host oid version message sensor_uuid proxy_uuid
+          sensor_name sensor_ip host oid version message sensor_uuid proxy_uuid
         ),
         dimensions_exclusions: [],
         metrics: [
