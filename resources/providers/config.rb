@@ -7,6 +7,7 @@ action :add do
   begin
     config_dir = new_resource.config_dir
     user = new_resource.user
+    group = new_resource.group
     tasks = new_resource.tasks
     zk_hosts = new_resource.zk_hosts
     log_dir = new_resource.log_dir
@@ -23,7 +24,7 @@ action :add do
       action [:enable, :start]
     end
 
-    # User creation
+    # User and Group creation
     execute 'create_user' do
       command "/usr/sbin/useradd #{user}"
       ignore_failure true
@@ -38,8 +39,8 @@ action :add do
     end
 
     directory log_dir do
-      owner 'root'
-      group 'root'
+      owner user
+      group group
       mode '0755'
     end
 

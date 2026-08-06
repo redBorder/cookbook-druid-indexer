@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 0.6.0
+
+  - manegron
+    - [f3540cd] Adding user and group to logdir
+
 ## 0.5.1
 
   - manegron
