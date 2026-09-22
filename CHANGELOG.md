@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 1.0.0
+
+  - José Jiménez
+    - [a6d623b] add rb_trap
+
 ## 0.6.0
 
   - manegron
