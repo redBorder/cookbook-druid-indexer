@@ -1,6 +1,11 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 1.0.1
+
+  - manegron
+    - [3ab9418] Upload cookbook only if opscode-erchef is active
+
 ## 1.0.0
 
   - José Jiménez
