@@ -85,6 +85,7 @@ action :add do
           wan_interface_description wan_interface_name wan_ip wan_ip_as_name wan_ip_country_code wan_ip_map wan_ip_net_name
           wan_l4_port wan_name wan_vlan wireless_id ti_category ti_average_score ti_policy_name ti_policy_id
           ti_indicators wireless_operator wireless_station zone zone_uuid client_asset_type device_id device_name device_role
+          ja4 tls_version tcp_rtt is_open_port
         ),
         dimensions_exclusions: %w(bytes pkts flow_end_reason first_switched wan_ip_name),
         metrics: [
