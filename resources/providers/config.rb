@@ -165,6 +165,18 @@ action :add do
           { type: 'count', name: 'events' },
         ],
       },
+      'rb_topology_discovery' => {
+        dimensions: %w(
+          record_type ip mac vendor hostname role from_ip to_ip to_mac layer source interface scan_id timestamp
+          sensor_name sensor_uuid service_provider service_provider_uuid namespace namespace_uuid organization
+          organization_uuid zone zone_uuid building building_uuid campus campus_uuid deployment deployment_uuid
+          market market_uuid floor floor_uuid scan_type
+        ),
+        dimensions_exclusions: [],
+        metrics: [
+          { type: 'count', name: 'events' },
+        ],
+      },
       'rb_location': {
         dimensions: %w(
           location_id latitude longitude address city region country postal_code sensor_name sensor_uuid
