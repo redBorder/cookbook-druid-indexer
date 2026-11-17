@@ -1,6 +1,13 @@
 cookbook-druid-indexer CHANGELOG
 ===============
 
+## 1.1.0
+
+  - nilsver
+    - [6b184e6] remove duplicate fields
+    - [0fa3d9d] Add more rb-flow-agent dimensions to rb_flow
+    - [163d78e] Add rb-flow-agent dimensions to rb_flow
+
 ## 1.0.1
 
   - manegron
