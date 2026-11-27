@@ -169,6 +169,7 @@ action :add do
       },
       'rb_location': {
         dimensions: %w(
+          old new type transition session client_mac client_mac_vendor client_latlong dot11_status client_profile
           location_id latitude longitude address city region country postal_code sensor_name sensor_uuid
           deployment deployment_uuid namespace namespace_uuid organization organization_uuid market market_uuid floor
           floor_uuid zone zone_uuid building building_uuid campus campus_uuid service_provider service_provider_uuid
@@ -176,6 +177,8 @@ action :add do
         dimensions_exclusions: [],
         metrics: [
           { type: 'count', name: 'events' },
+          { type: 'hyperUnique', name: 'clients', fieldName: 'client_mac' },
+          { type: 'hyperUnique', name: 'sessions', fieldName: 'session' },
           { type: 'doubleSum', name: 'sum_latitude', fieldName: 'latitude' },
           { type: 'doubleSum', name: 'sum_longitude', fieldName: 'longitude' },
           { type: 'hyperUnique', name: 'unique_locations', fieldName: 'location_id' },
